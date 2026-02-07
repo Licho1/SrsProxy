@@ -158,7 +158,7 @@ This is especially common when:
 - Gmail/Google Workspace tightened authentication requirements (2024+)
 - You use hMailServer, Postfix, or similar with forwarding rules
 
-SRS is the standard solution used by large forwarders (pobox.com, university mail systems, etc.) and is defined in [RFC 5765 (informational)](https://datatracker.ietf.org/doc/html/draft-phb-sfs-srs).
+SRS is the standard solution used by large forwarders (pobox.com, university mail systems, etc.) and is defined in [RFC 5765 (informational)](https://datatracker.ietf.org/doc/html/rfc5765).
 
 ## How SRS addresses work
 
