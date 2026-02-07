@@ -142,6 +142,24 @@ In `/etc/postfix/transport`:
 gmail.com   smtp:[127.0.0.1]:2525
 ```
 
+## Why you need this
+
+If you run a mail server that accepts mail for multiple domains and forwards it to Gmail (or Outlook, etc.), you've probably seen rejections like:
+
+> 550 5.7.26 This mail has been blocked because the sender is unauthenticated. Gmail requires all senders to authenticate with either SPF or DKIM.
+
+The root cause: when you forward `alice@randomsender.com` → `you@gmail.com`, Gmail checks SPF for `randomsender.com`. Your server's IP isn't in their SPF record, so it fails. If `randomsender.com` also lacks DKIM (many smaller domains don't set it up), there's no way for the message to pass authentication — Gmail rejects it.
+
+**SRS fixes the SPF side of this.** By rewriting the envelope sender to `SRS0=...@yourdomain.com`, Gmail checks SPF against *your* domain instead. Since your server's IP is in your own SPF record, it passes.
+
+This is especially common when:
+- You host email for several vanity/small domains and forward everything to one Gmail inbox
+- Senders don't have DKIM configured (newsletters, small businesses, legacy systems)
+- Gmail/Google Workspace tightened authentication requirements (2024+)
+- You use hMailServer, Postfix, or similar with forwarding rules
+
+SRS is the standard solution used by large forwarders (pobox.com, university mail systems, etc.) and is defined in [RFC 5765 (informational)](https://datatracker.ietf.org/doc/html/draft-phb-sfs-srs).
+
 ## How SRS addresses work
 
 ```
